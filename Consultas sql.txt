@@ -1,0 +1,28 @@
+Consultas sql
+
+1.El monto total vendido.
+SELECT SUM(v.cantidad * a.costo) AS MontoTotalVendido 
+FROM Venta v
+JOIN Articulo a ON v.idArticulo = a.idArticulo;
+
+
+2.El usuario que más dinero generó en septiembre.
+SELECT u.nombre, u.apellido, SUM(v.cantidad * a.costo) AS MontoIngresado
+FROM Venta v
+JOIN Articulo a ON v.idArticulo = a.idArticulo
+JOIN Usuario u ON v.usuarioVenta = u.idUsuario
+WHERE MONTH(v.fechaVenta) = 9 AND YEAR(v.fechaVenta) = 2024
+GROUP BY u.idUsuario
+ORDER BY MontoIngresado DESC
+LIMIT 1;
+
+
+3.El producto más vendido en septiembre junto con su unidad de venta.
+SELECT a.descripcion, uv.descripcion AS UnidadVenta, SUM(v.cantidad) AS CantidadVendida
+FROM Venta v
+JOIN Articulo a ON v.idArticulo = a.idArticulo
+JOIN UnidadVenta uv ON a.unidadVenta = uv.idUnidadVenta
+WHERE MONTH(v.fechaVenta) = 9 AND YEAR(v.fechaVenta) = 2024
+GROUP BY a.idArticulo, uv.descripcion
+ORDER BY CantidadVendida DESC
+LIMIT 1;
